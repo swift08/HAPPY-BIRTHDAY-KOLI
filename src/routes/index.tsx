@@ -1,13 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import { Ambience } from "@/components/Ambience";
 import { Envelope } from "@/components/Envelope";
 import { burstConfetti, gentleHearts } from "@/lib/confetti";
-import heroElegant from "@/assets/hero_elegant.webp.asset.json";
-import heroClub from "@/assets/hero_club.webp.asset.json";
-import couple from "@/assets/couple.webp.asset.json";
-import couch from "@/assets/couch.webp.asset.json";
+import whatsappVideo from "@/assets/photos/WhatsApp Video 2026-07-02 at 12.53.12 PM.webm";
+import heroVideo from "@/assets/photos/WhatsApp Video 2026-07-02 at 12.53.11 PM.webm";
+import goofballPhoto from "@/assets/photos/WhatsApp Image 2026-07-02 at 12.56.33 PM.webp";
+import usBeingUsPhoto from "@/assets/photos/WhatsApp Image 2026-07-02 at 12.56.33 PM (1).webp";
+import mainCharacterPhoto from "@/assets/photos/WhatsApp Image 2026-07-03 at 4.45.25 AM (1).webp";
+import heroPoster from "@/assets/photos/hero_poster.webp";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -16,8 +18,8 @@ export const Route = createFileRoute("/")({
       { name: "description", content: "A magical birthday surprise, made just for you." },
       { property: "og:title", content: "Happy Birthday Koli ❤️" },
       { property: "og:description", content: "A magical birthday surprise, made just for you." },
-      { property: "og:image", content: heroElegant.url },
-      { name: "twitter:image", content: heroElegant.url },
+      { property: "og:image", content: heroPoster },
+      { name: "twitter:image", content: heroPoster },
     ],
   }),
   component: Journey,
@@ -56,15 +58,9 @@ function Journey() {
       <Ambience />
 
       <AnimatePresence mode="wait">
-        {stage === "intro" && (
-          <IntroScreen key="intro" opened={opened} onOpen={openGift} />
-        )}
-        {stage === "reveal" && (
-          <RevealScreen key="reveal" onContinue={goPromise} />
-        )}
-        {stage === "promise" && (
-          <PromiseScreen key="promise" onYes={onYes} />
-        )}
+        {stage === "intro" && <IntroScreen key="intro" opened={opened} onOpen={openGift} />}
+        {stage === "reveal" && <RevealScreen key="reveal" onContinue={goPromise} />}
+        {stage === "promise" && <PromiseScreen key="promise" onYes={onYes} />}
       </AnimatePresence>
 
       {promised && <StoryFlow />}
@@ -104,7 +100,8 @@ function IntroScreen({ opened, onOpen }: { opened: boolean; onOpen: () => void }
         className="text-glow font-[var(--font-display)] text-5xl font-bold leading-tight text-[oklch(0.35_0.1_15)] sm:text-6xl md:text-7xl"
       >
         Happy Birthday <br />
-        <span className="italic text-[oklch(0.55_0.18_12)]">Koli</span> <span className="text-[oklch(0.65_0.2_15)]">❤</span>
+        <span className="italic text-[oklch(0.55_0.18_12)]">Koli</span>{" "}
+        <span className="text-[oklch(0.65_0.2_15)]">❤</span>
       </motion.h1>
 
       <motion.div
@@ -143,7 +140,7 @@ function RevealScreen({ onContinue }: { onContinue: () => void }) {
           transition={{ delay: 0.3 }}
           className="font-[var(--font-hand)] text-3xl text-[oklch(0.55_0.15_12)]"
         >
-          your surprise is ready
+          tika muchkond
         </motion.p>
         <motion.h2
           initial={{ y: 20, opacity: 0 }}
@@ -151,7 +148,7 @@ function RevealScreen({ onContinue }: { onContinue: () => void }) {
           transition={{ delay: 0.5 }}
           className="mt-3 font-[var(--font-display)] text-4xl font-bold text-[oklch(0.35_0.1_15)] sm:text-5xl"
         >
-          Let's begin ✨
+          click madu bevarsi
         </motion.h2>
         <motion.button
           initial={{ opacity: 0, y: 20 }}
@@ -175,7 +172,13 @@ function PromiseScreen({ onYes }: { onYes: () => void }) {
   const [showPopup, setShowPopup] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const noMessages = ["NO 🙄", "Nope 😂", "Wrong choice.", "Still trying?", "You seriously thought I'd let you press this? 😂"];
+  const noMessages = [
+    "NO 🙄",
+    "Nope 😂",
+    "Wrong choice.",
+    "Still trying?",
+    "You seriously thought I'd let you press this? 😂",
+  ];
   const label = noMessages[Math.min(attempts, noMessages.length - 1)];
 
   const runAway = () => {
@@ -224,15 +227,14 @@ function PromiseScreen({ onYes }: { onYes: () => void }) {
           animate={{ x: noPos.x, y: noPos.y, rotate: noPos.x * 0.2 }}
           transition={{ type: "spring", stiffness: 500, damping: 12 }}
           onMouseEnter={runAway}
-          onTouchStart={(e) => {
-            e.preventDefault();
+          onTouchStart={() => {
             runAway();
           }}
           onClick={(e) => {
             e.preventDefault();
             runAway();
           }}
-          className="rounded-full border-2 border-[oklch(0.72_0.14_15)] bg-white/70 px-8 py-4 text-lg font-semibold text-[oklch(0.5_0.14_15)] backdrop-blur"
+          className="rounded-full border-2 border-[oklch(0.72_0.14_15)] bg-white/70 px-8 py-4 text-lg font-semibold text-[oklch(0.5_0.14_15)] backdrop-blur touch-none"
         >
           {label}
         </motion.button>
@@ -258,7 +260,17 @@ function PromiseScreen({ onYes }: { onYes: () => void }) {
               <p className="mt-4 font-[var(--font-display)] text-2xl font-bold text-[oklch(0.35_0.1_15)]">
                 Shut up and press YES.
               </p>
-              <p className="mt-2 font-[var(--font-hand)] text-xl text-[oklch(0.5_0.14_15)]">
+              <div className="mt-4 overflow-hidden rounded-2xl border border-white/20 shadow-inner">
+                <video
+                  src={whatsappVideo}
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                  className="w-full h-auto object-contain"
+                />
+              </div>
+              <p className="mt-4 font-[var(--font-hand)] text-xl text-[oklch(0.5_0.14_15)]">
                 Be a responsible person and find a girlfriend for me. 😂❤
               </p>
               <button
@@ -290,6 +302,49 @@ function StoryFlow() {
   );
 }
 
+function ShiningParticles({ count = 35 }: { count?: number }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const particles = useMemo(
+    () =>
+      Array.from({ length: count }).map((_, i) => ({
+        id: i,
+        top: Math.random() * 100,
+        left: Math.random() * 100,
+        delay: Math.random() * 5,
+        size: 1 + Math.random() * 2.5, // 1px to 3.5px
+        opacity: 0.4 + Math.random() * 0.6,
+      })),
+    [count],
+  );
+
+  if (!mounted) return null;
+
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-10">
+      {particles.map((p) => (
+        <span
+          key={p.id}
+          className="twinkle absolute rounded-full bg-white"
+          style={{
+            top: `${p.top}%`,
+            left: `${p.left}%`,
+            width: `${p.size}px`,
+            height: `${p.size}px`,
+            animationDelay: `${p.delay}s`,
+            animationDuration: `${2 + Math.random() * 3}s`,
+            opacity: p.opacity,
+            boxShadow: "0 0 4px rgba(255,255,255,0.8), 0 0 8px oklch(0.85 0.14 15 / 0.6)",
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 function HeroBirthday() {
   const ref = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
@@ -302,13 +357,19 @@ function HeroBirthday() {
       ref={ref}
       className="relative flex min-h-screen items-center justify-center overflow-hidden"
     >
-      <motion.img
-        src={heroElegant.url}
-        alt="Koli, radiant"
-        style={{ y, scale }}
-        className="absolute inset-0 h-full w-full object-cover"
+      <motion.video
+        src={heroVideo}
+        poster={heroPoster}
+        autoPlay
+        loop
+        muted
+        playsInline
+        style={{ y, scale, willChange: "transform" }}
+        className="absolute inset-0 h-full w-full object-cover mobile-no-parallax"
       />
-      <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.9_0.08_15/0.4)] via-[oklch(0.85_0.1_10/0.55)] to-[oklch(0.75_0.14_12/0.85)]" />
+      <div className="absolute inset-0 bg-pink-500/35" />
+      <div className="absolute inset-0 bg-gradient-to-b from-[oklch(0.9_0.08_15/0.6)] via-[oklch(0.85_0.1_10/0.75)] to-[oklch(0.75_0.14_12/0.95)]" />
+      <ShiningParticles />
       <div className="relative z-10 px-6 text-center">
         <motion.p
           initial={{ y: 20, opacity: 0 }}
@@ -346,17 +407,17 @@ function HeroBirthday() {
 const LETTER_PARAS = [
   "To the person who saved my life without even knowing it,",
   "Happy Birthday, Koli. ❤",
-  "You've been so many things in my life — a really good friend, a sister, a mother whenever I needed one, and honestly... even more caring than my girlfriend ever was. And yes, an annoying piece of shit who laughs at my problems first and then silently helps me heal.",
+  "You've been so many things in my life - a really good friend, a sister, a mother whenever I needed one, and honestly... even more caring than my girlfriend ever was. And yes, an annoying piece of shit who laughs at my problems first and then silently helps me heal.",
   "Trust me, I really mean it when I say words aren't enough to describe what you are to me. You may call me your friend, but for me, you're much more than that.",
   "If I count the people who truly matter in my life, I'd still have fingers left. One middle finger is reserved for you because you're so damn annoying, and the other one is permanently booked for my ex-girlfriend. 😂",
   "Honestly, I hope our bond always stays like this. We know each other so well without needing to meet every day. Somewhere I feel that if we met too often, thoda attachment kam ho jayega. What we have right now is rare, genuine, and I never want to lose it.",
   "I don't know how life works. I've lost a lot of people who had been in my life for years. I don't know how many days, months, or years we'll have together, but trust me, even if I'm just a temporary person in your life, I want to be the best temporary person you'll ever have.",
-  "You're that beautiful flower in a garden that should never be picked. You deserve to stay exactly where you are, spreading happiness to everyone around you. Some things are too beautiful to be owned — they're simply meant to exist, and you're one of them.",
+  "You're that beautiful flower in a garden that should never be picked. You deserve to stay exactly where you are, spreading happiness to everyone around you. Some things are too beautiful to be owned - they're simply meant to exist, and you're one of them.",
   "You have a place in my heart that nobody can replace.",
   "You're like that one song I pretend to hate but secretly play on repeat. You annoy me, tease me, argue with me, and somehow still manage to be one of the biggest reasons I smile. You're the chaos in my calm, but also the calm in my chaos.",
   "Thank you for coming into my life when I needed someone the most. You healed parts of me that I never even told you were broken. I don't think you'll ever realize how much you've done for me, but I'll always be grateful for it.",
-  "And yes, before you start complaining, I haven't forgotten. I will get you your biryani and samosa — that's a promise. Consider it your official birthday treat. 😂❤",
-  "Stay exactly the way you are — kind, caring, irritating, and absolutely irreplaceable.",
+  "And yes, before you start complaining, I haven't forgotten. I will get you your biryani and shawarma - that's a promise. Consider it your official birthday treat. 😂❤",
+  "Stay exactly the way you are - kind, caring, irritating, and absolutely irreplaceable.",
   "Happy Birthday once again, idiot. I love you a lot, and I'm lucky to have you in my life. ❤",
 ];
 
@@ -375,7 +436,9 @@ function PhotoCard({ src, alt, tilt }: { src: string; alt: string; tilt: number 
         loading="lazy"
         className="h-72 w-full rounded-[1rem] object-cover sm:h-96"
       />
-      <p className="mt-3 text-center font-[var(--font-hand)] text-xl text-[oklch(0.5_0.14_15)]">{alt}</p>
+      <p className="mt-3 text-center font-[var(--font-hand)] text-xl text-[oklch(0.5_0.14_15)]">
+        {alt}
+      </p>
     </motion.div>
   );
 }
@@ -398,7 +461,7 @@ function LetterSection() {
 
         <div className="mt-16 grid gap-10 lg:grid-cols-[1fr_1.4fr_1fr] lg:items-center">
           <div className="hidden lg:block">
-            <PhotoCard src={couch.url} alt="my favourite goofball" tilt={-3} />
+            <PhotoCard src={goofballPhoto} alt="my favourite goofball" tilt={-3} />
           </div>
 
           <motion.article
@@ -421,7 +484,11 @@ function LetterSection() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true, amount: 0.4 }}
                   transition={{ duration: 0.8, delay: 0.05 }}
-                  className={i === 1 ? "text-center font-[var(--font-display)] text-3xl font-bold text-[oklch(0.5_0.18_12)] sm:text-4xl" : ""}
+                  className={
+                    i === 1
+                      ? "text-center font-[var(--font-display)] text-3xl font-bold text-[oklch(0.5_0.18_12)] sm:text-4xl"
+                      : ""
+                  }
                 >
                   {p}
                 </motion.p>
@@ -432,25 +499,25 @@ function LetterSection() {
                 viewport={{ once: true }}
                 className="pt-4 text-right font-[var(--font-display)] italic text-[oklch(0.5_0.14_15)]"
               >
-                — always, Moulya
+                - always, HARSHITH
               </motion.p>
             </div>
           </motion.article>
 
           <div className="lg:hidden">
             <div className="grid grid-cols-2 gap-4">
-              <PhotoCard src={couch.url} alt="goofball" tilt={-3} />
-              <PhotoCard src={couple.url} alt="us being us" tilt={3} />
+              <PhotoCard src={goofballPhoto} alt="goofball" tilt={-3} />
+              <PhotoCard src={usBeingUsPhoto} alt="us being us" tilt={3} />
             </div>
           </div>
 
           <div className="hidden lg:block">
-            <PhotoCard src={couple.url} alt="us being us" tilt={3} />
+            <PhotoCard src={usBeingUsPhoto} alt="us being us" tilt={3} />
           </div>
         </div>
 
         <div className="mt-16 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:hidden">
-          <PhotoCard src={heroClub.url} alt="main character energy" tilt={2} />
+          <PhotoCard src={mainCharacterPhoto} alt="main character energy" tilt={2} />
         </div>
       </div>
     </section>
@@ -481,7 +548,7 @@ function EndingSection() {
       className="relative flex min-h-screen items-center justify-center overflow-hidden px-6 py-24"
     >
       <img
-        src={heroClub.url}
+        src={mainCharacterPhoto}
         alt=""
         className="absolute inset-0 h-full w-full object-cover opacity-40"
       />
@@ -516,11 +583,26 @@ function EndingSection() {
           Forever grateful for you.
         </motion.p>
         <motion.p
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ delay: 1 }}
+          className="mt-8 font-[var(--font-hand)] text-2xl leading-relaxed text-[oklch(0.4_0.1_15)] sm:text-3xl"
+        >
+          If God gave me the chance to choose a girl, I would still look for someone with the exact
+          same character as yours.
+          <br />
+          Lots of love and happiness.
+          <br />
+          Stay blessed, stay safe. You are a truly wonderful and cute person—stay exactly the way
+          you are!
+        </motion.p>
+        <motion.p
           initial={{ opacity: 0, scale: 0.9 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 1 }}
-          className="text-glow mt-6 font-[var(--font-display)] text-3xl font-bold text-[oklch(0.35_0.15_12)] sm:text-4xl"
+          transition={{ delay: 1.3 }}
+          className="text-glow mt-8 font-[var(--font-display)] text-3xl font-bold text-[oklch(0.35_0.15_12)] sm:text-4xl"
         >
           Happy Birthday once again, Koli. ❤
         </motion.p>
@@ -529,7 +611,7 @@ function EndingSection() {
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 1.6 }}
+          transition={{ delay: 1.8 }}
           className="mt-16 flex justify-center gap-2 text-3xl"
         >
           {["❤", "✿", "❤", "✿", "❤"].map((c, i) => (

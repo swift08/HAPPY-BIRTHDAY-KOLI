@@ -1,6 +1,11 @@
-import { useMemo } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 export function Ambience({ density = 18 }: { density?: number }) {
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const hearts = useMemo(
     () =>
       Array.from({ length: density }).map((_, i) => ({
@@ -24,6 +29,8 @@ export function Ambience({ density = 18 }: { density?: number }) {
       })),
     [],
   );
+
+  if (!mounted) return null;
 
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden">
